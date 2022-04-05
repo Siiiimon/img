@@ -6,9 +6,15 @@
 
 #include "shader/shader.h"
 
+bool isWireframe = false;
+
 void processInput(GLFWwindow* window) {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        isWireframe = true;
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE)
+        isWireframe = false;
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -106,12 +112,15 @@ int main() {
     }
     stbi_image_free(data);
 
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     shaders.Use();
     shaders.Set("texture1", 0);
     shaders.Set("texture2", 1);
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
+        if (isWireframe)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        else
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
