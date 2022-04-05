@@ -7,14 +7,18 @@
 #include "shader/shader.h"
 
 bool isWireframe = false;
+float blend = 0.2f;
 
 void processInput(GLFWwindow* window) {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         isWireframe = true;
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE)
         isWireframe = false;
+
+    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        blend = (blend < 1.0f) ? blend + 0.01f : blend;
+    if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        blend = (blend > 0.0f) ? blend - 0.01f : blend;
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -121,6 +125,7 @@ int main() {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         else
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        shaders.Set("blend", blend);
 
         glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
