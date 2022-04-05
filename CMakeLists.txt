@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(img)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
-add_executable(img main.cpp)
+add_executable(img main.cpp shader.h)
 
 # add vendor dependencies
 find_package(OpenGL REQUIRED)
