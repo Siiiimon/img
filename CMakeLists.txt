@@ -3,7 +3,10 @@ project(img)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(img main.cpp shader.h)
+add_executable(img
+        src/main.cpp
+        src/shader/shader.cpp src/shader/shader.h
+)
 
 # add vendor dependencies
 find_package(OpenGL REQUIRED)
