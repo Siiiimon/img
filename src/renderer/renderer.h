@@ -18,8 +18,10 @@ class Renderer {
     Shader* m_shaders{};
     GLFWwindow* m_window{};
 
-    float deltaTime = 0.0f;
-    float lastFrame = 0.0f;
+    float m_deltaTime = 0.0f;
+    unsigned long long m_ticks = 0;
+    float m_deltas[100] = {0.0f};
+    float m_lastFrame = 0.0f;
 
 public:
     Renderer(int width, int height);
@@ -28,7 +30,9 @@ public:
     int getHeight() const;
     GLFWwindow *getWindow() const;
     float getDeltaTime() const;
-    void render(std::function<void()> update);
+    float getAverageFps() const;
+    void render(const std::function<void()>& update);
+    void SetVsync(bool enabled);
 
 private:
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);

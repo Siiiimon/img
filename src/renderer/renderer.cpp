@@ -83,17 +83,36 @@ GLFWwindow *Renderer::getWindow() const {
 }
 
 float Renderer::getDeltaTime() const {
-    return deltaTime;
+    return m_deltaTime;
 }
 
-void Renderer::render(std::function<void()> update) {
+void Renderer::SetVsync(bool enabled) {
+    if (m_window == nullptr) return;
+    if (enabled) {
+        glfwSwapInterval(1);
+    } else {
+        glfwSwapInterval(0);
+    }
+}
+
+float Renderer::getAverageFps() const {
+    float avg = 0;
+    for (float delta : m_deltas) {
+        avg += delta;
+    }
+    return 1.0f / (avg / 100.0f);
+}
+
+void Renderer::render(const std::function<void()>& update) {
     if (m_shaders == nullptr)
         throw std::runtime_error("shaders are uninitialised");
     while(!glfwWindowShouldClose(m_window)) {
         // timing
         auto currentFrame = static_cast<float> (glfwGetTime());
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        m_deltaTime = currentFrame - m_lastFrame;
+        m_lastFrame = currentFrame;
+        m_ticks++;
+        m_deltas[m_ticks % 100] = m_deltaTime;
 
 
         // input

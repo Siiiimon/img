@@ -10,6 +10,7 @@ class App {
     Renderer* m_renderer;
     bool m_showDemo;
     bool m_showInternals;
+    bool m_vsync;
 public:
     App();
     ~App();
