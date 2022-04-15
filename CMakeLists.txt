@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 add_executable(${PROJECT_NAME}
         src/main.cpp
         src/renderer/shader/shader.cpp src/renderer/shader/shader.h
-        src/renderer/renderer.cpp src/renderer/renderer.h src/app.cpp src/app.h)
+        src/renderer/renderer.cpp src/renderer/renderer.h
+        src/ui/log/log.cpp src/ui/log/log.h
+        src/app.cpp src/app.h)
 
 # add vendor dependencies
 find_package(OpenGL REQUIRED)
