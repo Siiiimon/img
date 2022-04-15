@@ -19,6 +19,11 @@
 #define DEFAULT_MAX_CHUNK_READ_SIZE 1024
 
 class Png {
+    int m_totalChunks;
+public:
+    int GetTotalChunks() const;
+
+private:
     std::vector<Chunk*> m_chunks;
     Logger* m_logger;
 public:

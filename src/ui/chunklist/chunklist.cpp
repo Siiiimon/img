@@ -1,7 +1,7 @@
 #include "chunklist.h"
 
-void ShowChunkList(std::vector<Chunk*> &chunks, std::function<void(int)>const& inspector) {
-    ImGui::SetNextWindowSize(ImVec2(300, 150), ImGuiCond_Once);
+void ShowChunkList(std::vector<Chunk*> &chunks, int totalChunksAmount, std::function<void(int)>const& inspector) {
+    ImGui::SetNextWindowSize(ImVec2(500, 150), ImGuiCond_Once);
     ImGui::Begin("Chunk List");
     
     if (chunks.empty()) {
@@ -12,6 +12,8 @@ void ShowChunkList(std::vector<Chunk*> &chunks, std::function<void(int)>const& i
         ImGui::SameLine(window_size.x * 0.5f - msg_size.x * 0.5f);
         ImGui::TextDisabled("No chunks available.");
     } else {
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+        ImGui::BeginChild("Chunklist Listchild", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y - 25), false, window_flags);
         ImGui::Columns(4);
         ImGui::Separator();
         ImGui::Text("Type"); ImGui::NextColumn();
@@ -47,6 +49,10 @@ void ShowChunkList(std::vector<Chunk*> &chunks, std::function<void(int)>const& i
             else ImGui::Text("Ancillary");
         }
         ImGui::Columns(1); ImGui::Separator();
+        ImGui::EndChild();
+        ImGui::Separator();
+        ImGui::Text("Available chunks: %lu", chunks.size()); ImGui::SameLine(0, 20);
+        ImGui::Text("Unrecognized chunks: %lu", totalChunksAmount - chunks.size());
     }
     
     ImGui::End();

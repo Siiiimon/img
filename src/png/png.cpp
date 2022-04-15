@@ -25,7 +25,8 @@ void Png::Read(const char *path, bool throwOnError) {
     } else {
         if (m_logger != nullptr) m_logger->Logln("Header is valid");
     }
-    
+
+    m_totalChunks = 0;
     bool eof = false;
     while(!eof) {
         // TODO: generate warning if ihdr or iend are out of place
@@ -72,6 +73,7 @@ void Png::Read(const char *path, bool throwOnError) {
             return;
         }
         unsigned int crc = deserialiseInt(crc_buf, true);
+        m_totalChunks++;
         
         if (strncmp(type, "IHDR", 4) == 0) m_chunks.push_back(new Ihdr(len, type, data, crc));
         if (strncmp(type, "IEND", 4) == 0) eof = true;
@@ -85,6 +87,10 @@ void Png::Read(const char *path, bool throwOnError) {
     }
     in.close();
     if (m_logger != nullptr) m_logger->Logln("Finished reading file");
+}
+
+int Png::GetTotalChunks() const {
+    return m_totalChunks;
 }
 
 std::vector<Chunk*> &Png::GetChunks() { 

@@ -1,7 +1,7 @@
 #include "app.h"
 
 App::App() {
-    m_showList = false;
+    m_showList = true;
     m_showInspector = false;
     m_inspectorIndex = 0;
     m_showDemo = false;
@@ -22,7 +22,7 @@ void App::update() {
     drawMainMenu();
 
     if (m_showList)
-        ShowChunkList(m_png->GetChunks(), [this](int i) {
+        ShowChunkList(m_png->GetChunks(), m_png->GetTotalChunks(), [this](int i) {
             m_inspectorIndex = i;
             m_showInspector = true;
         });
@@ -65,10 +65,14 @@ void App::drawMainMenu() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("Open", "Ctrl+O")) {
-                m_png->Read("assets/turtle.png", true);
-                m_showList = true;
+                try {
+                    m_png->Read("assets/turtle.png", true); // throw if not force reading
+                } catch (const std::exception &e) {
+                    m_logger->Logf("File Open error: %s\n", e.what());
+                    // TODO: option to try again without erroring out
+                }
+                m_logger->Logf("Read %lu out of %d chunks\n", m_png->GetChunks().size(), m_png->GetTotalChunks());
             }
-            // TODO: option to try again without erroring out
             // TODO: open recent
             ImGui::Separator();
             if (ImGui::MenuItem("Exit", "ESC")) {
@@ -80,6 +84,10 @@ void App::drawMainMenu() {
             ImGui::MenuItem("Log", "", &m_showLogger);
             ImGui::MenuItem("Chunk List", "", &m_showList);
             ImGui::MenuItem("Chunk Inspector", "", &m_showInspector);
+            ImGui::MenuItem("Debug", "", &m_showInternals);
+            if (ImGui::MenuItem("Open Error Popup")) {
+                ImGui::OpenPopup("File Open Error");
+            }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
