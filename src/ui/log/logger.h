@@ -1,5 +1,5 @@
-#ifndef IMG_LOG_H
-#define IMG_LOG_H
+#ifndef IMG_LOGGER_H
+#define IMG_LOGGER_H
 
 #include <imgui.h>
 
@@ -13,4 +13,4 @@ public:
     void ShowLog(bool *show_log);
 };
 
-#endif /* IMG_LOG_H */
+#endif /* IMG_LOGGER_H */

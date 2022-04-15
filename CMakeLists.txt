@@ -4,11 +4,20 @@ project(img)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(${PROJECT_NAME}
+        # app
         src/main.cpp
         src/renderer/shader/shader.cpp src/renderer/shader/shader.h
         src/renderer/renderer.cpp src/renderer/renderer.h
-        src/ui/log/log.cpp src/ui/log/log.h
-        src/app.cpp src/app.h)
+        src/app.cpp src/app.h
+        src/util.cpp src/util.h
+        # png
+        src/png/png.cpp src/png/png.h
+        src/png/chunks/chunk.cpp src/png/chunks/chunk.h
+        src/png/chunks/ihdr.cpp src/png/chunks/ihdr.h
+        # ui sources
+        src/ui/log/logger.cpp src/ui/log/logger.h
+        src/ui/chunklist/chunklist.cpp src/ui/chunklist/chunklist.h
+        src/ui/chunkinspector/chunkinspector.cpp src/ui/chunkinspector/chunkinspector.h)
 
 # add vendor dependencies
 find_package(OpenGL REQUIRED)

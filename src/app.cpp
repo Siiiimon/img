@@ -1,16 +1,35 @@
 #include "app.h"
 
 App::App() {
-    m_showDemo = true;
-    m_showInternals = true;
+    m_showList = false;
+    m_showInspector = false;
+    m_inspectorIndex = 0;
+    m_showDemo = false;
+    m_showInternals = false;
     m_vsync = true;
     m_showLogger = true;
     m_logger = new Logger();
     m_renderer = new Renderer(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     m_logger->Logln("App initialized");
+    m_png = new Png(m_logger);
+}
+
+App::~App() {
+    delete m_renderer;
 }
 
 void App::update() {
+    drawMainMenu();
+
+    if (m_showList)
+        ShowChunkList(m_png->GetChunks(), [this](int i) {
+            m_inspectorIndex = i;
+            m_showInspector = true;
+        });
+
+    if (m_showInspector)
+        ShowChunkInspector(m_png->GetChunks(), m_inspectorIndex);
+
     if (m_showInternals)
         showInternals(&m_showInternals);
 
@@ -22,7 +41,6 @@ void App::update() {
 }
 
 void App::run() {
-    m_logger->Logln("Entering render-loop");
     m_renderer->render([this] { update(); });
 }
 
@@ -43,6 +61,27 @@ void App::showInternals(bool *p_open) {
     ImGui::End();
 }
 
-App::~App() {
-    delete m_renderer;
+void App::drawMainMenu() {
+    if (ImGui::BeginMainMenuBar()) {
+        if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("Open", "Ctrl+O")) {
+                m_png->Read("assets/turtle.png", true);
+                m_showList = true;
+            }
+            // TODO: option to try again without erroring out
+            // TODO: open recent
+            ImGui::Separator();
+            if (ImGui::MenuItem("Exit", "ESC")) {
+                // uhh...
+            }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Windows")) {
+            ImGui::MenuItem("Log", "", &m_showLogger);
+            ImGui::MenuItem("Chunk List", "", &m_showList);
+            ImGui::MenuItem("Chunk Inspector", "", &m_showInspector);
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
 }
