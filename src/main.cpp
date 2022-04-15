@@ -1,13 +1,7 @@
-#include "renderer/renderer.h"
-
-#define DEFAULT_WIDTH 1000
-#define DEFAULT_HEIGHT 800
+#include "app.h"
 
 int main() {
-
-    Renderer renderer(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-
-    renderer.render();
-
+    App app = App();
+    app.run();
     return 0;
 }

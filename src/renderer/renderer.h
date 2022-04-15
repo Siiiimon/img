@@ -24,7 +24,11 @@ class Renderer {
 public:
     Renderer(int width, int height);
     ~Renderer();
-    void render();
+    int getWidth() const;
+    int getHeight() const;
+    GLFWwindow *getWindow() const;
+    float getDeltaTime() const;
+    void render(std::function<void()> update);
 
 private:
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);

@@ -70,7 +70,23 @@ Renderer::Renderer(int width, int height) : m_width{width}, m_height{height} {
     glBindVertexArray(0);
 }
 
-void Renderer::render() {
+int Renderer::getWidth() const {
+    return m_width;
+}
+
+int Renderer::getHeight() const {
+    return m_height;
+}
+
+GLFWwindow *Renderer::getWindow() const {
+    return m_window;
+}
+
+float Renderer::getDeltaTime() const {
+    return deltaTime;
+}
+
+void Renderer::render(std::function<void()> update) {
     if (m_shaders == nullptr)
         throw std::runtime_error("shaders are uninitialised");
     while(!glfwWindowShouldClose(m_window)) {
@@ -89,7 +105,7 @@ void Renderer::render() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::ShowDemoWindow();
+        update();
 
 
         // render
