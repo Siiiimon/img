@@ -8,6 +8,8 @@
 #include <sstream>
 #include <iostream>
 #include <filesystem>
+#include <stdexcept>
+#include <fmt/core.h>
 
 class Shader
 {

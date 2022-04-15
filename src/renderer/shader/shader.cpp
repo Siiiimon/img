@@ -7,23 +7,15 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath) {
     std::ifstream fShaderFile;
     vShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
     fShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-    try
-    {
-        vShaderFile.open(vertexPath);
-        fShaderFile.open(fragmentPath);
-        std::stringstream vShaderStream, fShaderStream;
-        vShaderStream << vShaderFile.rdbuf();
-        fShaderStream << fShaderFile.rdbuf();
-        vShaderFile.close();
-        fShaderFile.close();
-        vertexCode   = vShaderStream.str();
-        fragmentCode = fShaderStream.str();
-    }
-    catch (std::ifstream::failure& e)
-    {
-        std::cerr << "Failed to read shader file: " << e.what() << std::endl;
-        std::cerr << "Current working directory: " << std::filesystem::current_path() << std::endl;
-    }
+    vShaderFile.open(vertexPath);
+    fShaderFile.open(fragmentPath);
+    std::stringstream vShaderStream, fShaderStream;
+    vShaderStream << vShaderFile.rdbuf();
+    fShaderStream << fShaderFile.rdbuf();
+    vShaderFile.close();
+    fShaderFile.close();
+    vertexCode   = vShaderStream.str();
+    fragmentCode = fShaderStream.str();
     const char* vShaderCode = vertexCode.c_str();
     const char * fShaderCode = fragmentCode.c_str();
 
@@ -76,7 +68,7 @@ void Shader::checkCompileErrors(unsigned int shader, const std::string& type) {
         if (!success)
         {
             glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-            std::cerr << "Failed to compile fragment shader: " << infoLog << std::endl;
+            throw std::runtime_error(fmt::format("Failed to compile fragment shader: {}", infoLog));
         }
     }
     else
@@ -85,7 +77,7 @@ void Shader::checkCompileErrors(unsigned int shader, const std::string& type) {
         if (!success)
         {
             glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-            std::cerr << "Failed to compile fragment shader: " << infoLog << std::endl;
+            throw std::runtime_error(fmt::format("Failed to compile fragment shader: {}", infoLog));
         }
     }
 }
