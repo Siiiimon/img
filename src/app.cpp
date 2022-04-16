@@ -2,12 +2,15 @@
 
 App::App() {
     m_showList = true;
-    m_showInspector = false;
+    m_showInspector = true;
     m_inspectorIndex = 0;
     m_showDemo = false;
     m_showInternals = false;
     m_vsync = true;
     m_showLogger = true;
+    m_showHexViewer = true;
+    m_hexHighlightFrom = -1;
+    m_hexHighlightTo = -1;
     m_logger = new Logger();
     m_renderer = new Renderer(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     m_logger->Logln("App initialized");
@@ -19,13 +22,20 @@ App::~App() {
 }
 
 void App::update() {
+    m_hexHighlightFrom = -1;
+    m_hexHighlightTo = -1;
     drawMainMenu();
 
     if (m_showList)
-        ShowChunkList(m_png->GetChunks(), m_png->GetTotalChunks(), [this](int i) {
-            m_inspectorIndex = i;
-            m_showInspector = true;
-        });
+        ShowChunkList(m_png->GetChunks(), m_png->GetTotalChunks(),
+                      [this](int i) {
+                          m_inspectorIndex = i;
+                          m_showInspector = true;
+                      },
+                      [this](unsigned long from, unsigned long to) {
+                          m_hexHighlightFrom = from;
+                          m_hexHighlightTo = to;
+                      });
 
     if (m_showInspector)
         ShowChunkInspector(m_png->GetChunks(), m_inspectorIndex);
@@ -35,6 +45,9 @@ void App::update() {
 
     if (m_showLogger)
         m_logger->ShowLog(&m_showLogger);
+
+    if (m_showHexViewer)
+        ShowHexView("assets/turtle.png", &m_showHexViewer, m_hexHighlightFrom, m_hexHighlightTo);
 
     if (m_showDemo)
         ImGui::ShowDemoWindow(&m_showDemo);
@@ -84,10 +97,8 @@ void App::drawMainMenu() {
             ImGui::MenuItem("Log", "", &m_showLogger);
             ImGui::MenuItem("Chunk List", "", &m_showList);
             ImGui::MenuItem("Chunk Inspector", "", &m_showInspector);
+            ImGui::MenuItem("Hex View", "", &m_showHexViewer);
             ImGui::MenuItem("Debug", "", &m_showInternals);
-            if (ImGui::MenuItem("Open Error Popup")) {
-                ImGui::OpenPopup("File Open Error");
-            }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();

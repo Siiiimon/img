@@ -31,6 +31,7 @@ void Png::Read(const char *path, bool throwOnError) {
     while(!eof) {
         // TODO: generate warning if ihdr or iend are out of place
         // TODO: generate warning on missing idat chunk
+        unsigned long currentOffset = in.tellg();
         char len_buf[4];
         in.read((char*)&len_buf, 4);
         if (!in || in.fail()) {
@@ -74,15 +75,16 @@ void Png::Read(const char *path, bool throwOnError) {
         }
         unsigned int crc = deserialiseInt(crc_buf, true);
         m_totalChunks++;
-        
-        if (strncmp(type, "IHDR", 4) == 0) m_chunks.push_back(new Ihdr(len, type, data, crc));
+        currentOffset += 8ul; // add the remaining 8 bytes from the header
+
+        if (strncmp(type, "IHDR", 4) == 0) m_chunks.push_back(new Ihdr(len, type, data, crc, currentOffset));
         if (strncmp(type, "IEND", 4) == 0) eof = true;
     }
     if (!in.eof()) {
         auto current = in.tellg();
         in.seekg(0, std::ios_base::end);
         long long missed = in.tellg() - current;
-        if (m_logger != nullptr)
+        if (m_logger != nullptr && missed > 0)
             m_logger->Logf("IEND encountered but we're not at EOF yet, missed %lld bytes\n", missed);
     }
     in.close();

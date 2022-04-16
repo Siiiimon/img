@@ -1,6 +1,8 @@
 #include "chunklist.h"
 
-void ShowChunkList(std::vector<Chunk*> &chunks, int totalChunksAmount, std::function<void(int)>const& inspector) {
+void ShowChunkList(std::vector<Chunk*> &chunks, int totalChunksAmount,
+                   std::function<void(int)>const& inspector,
+                   std::function<void(unsigned long, unsigned long)>const& hexviewer) {
     ImGui::SetNextWindowSize(ImVec2(500, 150), ImGuiCond_Once);
     ImGui::Begin("Chunk List");
     
@@ -27,9 +29,10 @@ void ShowChunkList(std::vector<Chunk*> &chunks, int totalChunksAmount, std::func
             ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4) ImColor(0, 0, 0, 80));
             ImGui::Selectable(chunks[i]->Type().c_str(), false, ImGuiSelectableFlags_SpanAllColumns);
             ImGui::PopStyleColor(2);
-            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
-                // call ofApp's callback with the index being handed over to the inspector
-                inspector(i);
+            if (ImGui::IsItemHovered()) {
+                hexviewer(chunks[i]->OffsetInFile(), chunks[i]->OffsetInFile() + chunks[i]->Length());
+                if (ImGui::IsMouseDoubleClicked(0))
+                    inspector(i);
             }
             ImGui::NextColumn();
             

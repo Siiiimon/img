@@ -19,7 +19,7 @@
 #define DEFAULT_MAX_CHUNK_READ_SIZE 1024
 
 class Png {
-    int m_totalChunks;
+    int m_totalChunks{};
 public:
     int GetTotalChunks() const;
 

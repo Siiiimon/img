@@ -1,6 +1,7 @@
 #include "ihdr.h"
 
-Ihdr::Ihdr(uint32_t length, char type[4], std::vector<char> data, unsigned int crc) : Chunk(length, type, std::move(data), crc) {
+Ihdr::Ihdr(uint32_t length, char type[4], std::vector<char> data, unsigned int crc, unsigned long offsetInFile)
+: Chunk(length, type, std::move(data), crc, offsetInFile) {
 //    if (length != x) throw std::runtime_error("IHDR chunk has invalid length")
     std::vector<char> width_buf(m_data.begin(), m_data.begin() + 4);
     std::vector<char> height_buf(m_data.begin() + 4, m_data.begin() + 8);

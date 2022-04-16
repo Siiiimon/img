@@ -17,7 +17,8 @@ add_executable(${PROJECT_NAME}
         # ui sources
         src/ui/log/logger.cpp src/ui/log/logger.h
         src/ui/chunklist/chunklist.cpp src/ui/chunklist/chunklist.h
-        src/ui/chunkinspector/chunkinspector.cpp src/ui/chunkinspector/chunkinspector.h)
+        src/ui/chunkinspector/chunkinspector.cpp src/ui/chunkinspector/chunkinspector.h
+        src/ui/hexview/hexview.cpp src/ui/hexview/hexview.h src/ui/dearies/dearies.cpp src/ui/dearies/dearies.h)
 
 # add vendor dependencies
 find_package(OpenGL REQUIRED)

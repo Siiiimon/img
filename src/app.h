@@ -8,6 +8,7 @@
 #include "ui/log/logger.h"
 #include "ui/chunklist/chunklist.h"
 #include "ui/chunkinspector/chunkinspector.h"
+#include "ui/hexview/hexview.h"
 
 #define DEFAULT_WIDTH 1000
 #define DEFAULT_HEIGHT 800
@@ -16,9 +17,13 @@ class App {
     Renderer* m_renderer;
     Logger* m_logger;
     Png* m_png;
+    // TODO make a struct for these
     bool m_showList;
     bool m_showInspector;
     int m_inspectorIndex;
+    bool m_showHexViewer;
+    unsigned long m_hexHighlightFrom;
+    unsigned long m_hexHighlightTo;
     bool m_showDemo;
     bool m_showInternals;
     bool m_showLogger;

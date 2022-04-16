@@ -1,6 +1,6 @@
 #include "chunk.h"
 
-Chunk::Chunk(uint32_t length, char type[4], std::vector<char> data, unsigned int crc) {
+Chunk::Chunk(uint32_t length, char type[4], std::vector<char> data, unsigned int crc, unsigned long offsetInFile) {
     m_length = length;
     memcpy(m_type, type, 4);
     for (char c : m_type) {
@@ -8,6 +8,7 @@ Chunk::Chunk(uint32_t length, char type[4], std::vector<char> data, unsigned int
     }
     m_data = std::move(data);
     m_crc = crc;
+    m_offsetInFile = offsetInFile;
 }
 
 int Chunk::Length() {
@@ -25,6 +26,10 @@ bool Chunk::IsCritical() {
 bool Chunk::IsCrcValid() {
     // TODO
     return true;
+}
+
+unsigned long Chunk::OffsetInFile() {
+    return m_offsetInFile;
 }
 
 void Chunk::ShowInspectorContent() {

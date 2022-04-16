@@ -22,7 +22,7 @@ class Ihdr : public Chunk {
     // verify compression bit (0)
     // verify filter method bit (0)
 public:
-    Ihdr(uint32_t length, char type[4], std::vector<char> data, unsigned int crc);
+    Ihdr(uint32_t length, char type[4], std::vector<char> data, unsigned int crc, unsigned long offsetInFile);
     int Width();
     int Height();
     int BitDepth(); // could define enums for these
